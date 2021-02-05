@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import axios from 'axios'
 
 import Header from './Header'
@@ -16,6 +16,10 @@ const Main = () => {
   const [city, setCity] = useState()
   const [error, setError] = useState()
 
+  // useEffect(()=>{
+  //   console.log('useEffect')
+  // }, [city])
+
   const api_call = async e => {
     e.preventDefault()
     const location = e.target.elements.location.value
@@ -25,26 +29,30 @@ const Main = () => {
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_KEY}&units=metric`
     const request = axios.get(url)
     const response = await request
-
+    
     setWeather(response.data.main)
     setCity(response.data.name)
     setError(null)
   }
+  const abc = useMemo(() => {
+    console.log('memo w main')
+    return weather && <WeatherData />
+  }, [city])
   return (
-   <div className='main'>
-    <Header/>
-    <Content>
-      <DateTime/>
-      <Tagline/>
-      <Context.Provider value={{ api_call, weather, city, error }}>
-        <WeatherSearch/>
-        { weather && <WeatherData /> }
-        { error && <Error error={error}></Error> }
+    <div className='main'>
+      <Header />
+      <Content>
+        <DateTime />
+        <Tagline />
+        <Context.Provider value={{ api_call, weather, city, error }}>
+          <WeatherSearch />
+          {abc}
+          {error && <Error error={error}></Error>}
 
-      </Context.Provider>
-      <Footer/>
-    </Content>
-   </div>
+        </Context.Provider>
+        <Footer />
+      </Content>
+    </div>
   )
 }
 

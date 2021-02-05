@@ -1,10 +1,17 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 
 import Context from '../Context'
 
 const WeatherData = () => {
   const { weather , city} = useContext(Context)
   const {temp, humidity, pressure} = weather
+  
+  useEffect(()=>{
+    console.log('useEffect')
+  }, [city])
+
+console.log('weatherData component')
+  
   return (
     <div className="weather-data">
   <p className="weather__tagline">Weather forecast for <span className="weather-data__city">{city}</span></p>
