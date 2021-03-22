@@ -11,6 +11,17 @@ import DateTime from './DateTime'
 import Tagline from './Tagline'
 import Footer from './Footer'
 
+import Counter from "./Counter"
+import { Provider, createStore, combineReducers } from "../myRedux"
+import counterReducer from "./counterStore"
+
+const rootReducer = combineReducers({
+  counter: counterReducer,
+  abc: (state = 0, action) => {}
+})
+
+const store = createStore(rootReducer)
+
 const Main = () => {
   const [weather, setWeather] = useState()
   const [city, setCity] = useState()
@@ -29,7 +40,7 @@ const Main = () => {
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_KEY}&units=metric`
     const request = axios.get(url)
     const response = await request
-    
+
     setWeather(response.data.main)
     setCity(response.data.name)
     setError(null)
@@ -50,9 +61,12 @@ const Main = () => {
           {error && <Error error={error}></Error>}
 
         </Context.Provider>
+        <Provider store={store}>
+          <Counter />
+        </Provider>
         <Footer />
       </Content>
-    </div>
+    </div >
   )
 }
 
